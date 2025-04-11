@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" >
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+<div class="content-wrapper">
+<!-- Top Header Section -->
+<div class="top-header d-flex justify-content-center p-2">
+    <!-- Left side: Social icons and address/timings -->
+    <div class="left-info d-flex align-items-center">
+        <div class="social-icons mr-3">
+            <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
+            <a href="https://www.instagram.com"><i class="fa fa-instagram"></i></a>
+        </div>
+        <div class="address-info">
+            <span>Vilnius: 8:00 – 22:00 </span>
+        </div>
+    </div>
+    <!-- Right side: Address info only, button removed -->
+    <div class="right-info d-flex align-items-center">
+        <div class="location-info mr-3">
+            <span><i class="fa fa-map-marker"></i> Skroblų g. 25, Vilnius</span>
+        </div>
+        <!-- "Registracija internetu" button has been removed -->
+    </div>
+</div>
+
+<!-- Main Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <!-- Brand Name on the Left -->
+        <a class="navbar-brand" href="/">
+            <i class="fa fa-paw custom-icon2" aria-hidden="true" alt="Saugi pėda logo"></i>
+        </a>
+        <!-- Toggler for Mobile View -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar Content -->
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <!-- Centered Navbar Links -->
+            <div class="d-flex justify-content-center flex-grow-1">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="/uzrasai">Užrašai</a></li>
+                        {% if user.role != 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="/uzsakymai">Apsilankymai</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="/my-animals">Mano augintiniai</a></li>
+                        {% if user.role == 'admin' %}
+                            <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="/login">Prisijungti</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/sign-up">Registracija</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <!-- Right-Aligned Buttons -->
+            <div class="d-flex justify-content-center">
+                <ul class="navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-register" href="/uzsakymai/select-service">Registracija internetu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-secondary ml-2" href="/logout">Atsijungti</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-register" href="/uzsakymai/select-service">Registracija internetu</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+
+
+
+<!-- Flash messages -->
+<div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<div class="container-fluid">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+
+<!-- Footer Section -->
+<footer class="footer bg-dark text-light pt-4">
+    <div class="container">
+        <div class="row">
+            <!-- Column 1: Contact Info -->
+            <div class="col-md-4 mb-4">
+                <div class="footer-logo mb-3">
+                    <i class="fa fa-paw custom-icon" aria-hidden="true" alt="Saugi pėda logo"></i>
+                    <h5 class="mt-2">Saugi Pėda</h5>
+                    <p>Veterinarinė klinika</p>
+                </div>
+                <p>
+                    <a href="tel:+37064745739" style="text-decoration: none; color: inherit;">
+                        <i class="fa fa-phone"></i> +370 647 45739
+                    </a>
+                </p>
+                <div>
+                    <p><strong>Veterinarijos klinikos Vilniuje adresas</strong><br>Skroblų g. 25, Vilnius</p>
+                </div>
+                <div class="social-icons mt-3">
+                    <a href="https://www.facebook.com"><i class="fa fa-facebook"></i></a>
+                    <a href="https://www.instagram.com"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <!-- Column 3: Gallery and Working Hours -->
+            <div class="col-md-6 mb-4">
+                <h5>Galerija</h5>
+                <div class="gallery d-flex flex-wrap mb-3">
+                    <!-- Gallery Images -->
+                    <img src="/static/photo/dog1.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                    <img src="/static/photo/dog2.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                    <img src="/static/photo/dog3.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                    <img src="/static/photo/dog4.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                    <img src="/static/photo/dog5.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                    <img src="/static/photo/dog6.jpg" class="gallery-img img-thumbnail" data-toggle="modal" data-target="#imageModal" onclick="setImageSrc(this.src)">
+                </div>
+                <!-- Working Hours -->
+                <div class="working-hours">
+                    <h6>Veterinarijos klinika Vilniuje "Saugi pėda" darbo laikas</h6>
+                    <p>I - V: <span>8:00 - 22:00</span></p>
+                    <p>VI: <span>8:00 - 22:00</span></p>
+                    <p>VII: <span>8:00 - 22:00</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Galerija</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center">
+                    <img id="modalImage" src="" alt="Galerijos vaizdas" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+</footer>
+
+<!-- Bottom Copyright Section -->
+    <div class="footer-bottom text-center py-3">
+        <p class="mb-0">&copy; 2024 Sukūrė Paulius. Visos teisės saugomos</p>
+    </div>
+
+
+
+
+    <!-- Chat Icon Button -->
+    <div class="chat-icon" onclick="toggleChat()">
+        <i class="fa fa-comments" aria-hidden="true"></i>
+    </div>
+
+    <!-- Chat Popup -->
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <span>Kaip galiu jums padėti?</span>
+            <button type="button" class="close" onclick="toggleChat()">&times;</button>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-footer">
+            <form id="chatForm" onsubmit="sendMessage(event)">
+                <input type="text" id="userInput" placeholder="Jūsų klausimas..." autocomplete="off" required>
+                <button type="submit">Siųsti</button>
+            </form>
+        </div>
+    </div>
+
+<!-- Scripts Section -->
+<!-- Full jQuery (needed for CLNDR.js) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Popper and Bootstrap JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<!-- Underscore.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+
+<!-- CLNDR.js -->
+<script src="https://unpkg.com/clndr/clndr.min.js"></script>
+
+<script src="{{ url_for('static', filename='index.js') }}"></script>
+    <!-- Chat Popup JavaScript -->
+    <script>
+    function setImageSrc(src) {
+        document.getElementById('modalImage').src = src;
+    }
+
+function toggleChat() {
+        const chatPopup = document.getElementById("chatPopup");
+        chatPopup.classList.toggle("show");
+    }
+
+    function sendMessage(event) {
+        event.preventDefault(); // Prevents the form from reloading the page
+
+        let userInput = document.getElementById("userInput").value; // Get user input
+        const chatBody = document.getElementById("chatBody");
+
+        // Display the user's message in the chat
+        const userMessage = document.createElement("div");
+        userMessage.className = "user-message";
+        userMessage.textContent = userInput;
+        chatBody.appendChild(userMessage);
+
+        // Clear the input field
+        document.getElementById("userInput").value = "";
+
+        // Send the message to the chatbot endpoint
+        fetch("/chatbot", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ user_input: userInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+
+            const botMessage = document.createElement("div");
+            botMessage.className = "bot-message";
+            botMessage.textContent = data.response;
+            chatBody.appendChild(botMessage);
+
+            chatBody.scrollTop = chatBody.scrollHeight;
+        })
+        .catch(error => console.error("Error:", error));
+    }
+
+
+   document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert-dismissible');
+
+    alerts.forEach(alert => {
+        // Set a timeout to start fading after 5 seconds
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+        }, 3000);
+
+        // Remove the element from the DOM after it fades out
+        setTimeout(() => {
+            alert.remove();
+        }, 5000); // 8 seconds to allow 5s delay + 3s fade-out
+    });
+});
+
+</script>
+
+</body>
+</html>

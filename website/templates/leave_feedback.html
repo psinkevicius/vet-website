@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Leave Feedback{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-lg">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">Palikite atsiliepimą</h2>
+            <form method="POST">
+                <!-- Star Rating -->
+                <div class="mb-4 text-center">
+                    <label class="form-label fw-bold">Įvertinimas (iš 5-ių)</label>
+                    <div id="star-rating" class="d-flex justify-content-center">
+                        <!-- Stars -->
+                        <i class="fa fa-star text-secondary rating-star" data-value="1"></i>
+                        <i class="fa fa-star text-secondary rating-star" data-value="2"></i>
+                        <i class="fa fa-star text-secondary rating-star" data-value="3"></i>
+                        <i class="fa fa-star text-secondary rating-star" data-value="4"></i>
+                        <i class="fa fa-star text-secondary rating-star" data-value="5"></i>
+                    </div>
+                    <input type="hidden" name="rating" id="rating-input">
+                </div>
+
+                <!-- Comment Field -->
+                <div class="mb-4">
+                    <label for="comment" class="form-label fw-bold">Komentaras</label>
+                    <textarea name="comment" id="comment" class="form-control" rows="5" placeholder="Jūsų komentaras..."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn coloured-button btn-lg w-100">
+                        <i class="fa fa-paper-plane"></i> Palikti atsiliepimą
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".rating-star");
+        const ratingInput = document.getElementById("rating-input");
+
+        stars.forEach(star => {
+            star.addEventListener("click", () => {
+                const rating = star.getAttribute("data-value");
+                ratingInput.value = rating;
+
+                // Highlight stars up to the selected one
+                stars.forEach(s => {
+                    if (s.getAttribute("data-value") <= rating) {
+                        s.classList.add("text-warning");
+                        s.classList.remove("text-secondary");
+                    } else {
+                        s.classList.add("text-secondary");
+                        s.classList.remove("text-warning");
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}
+

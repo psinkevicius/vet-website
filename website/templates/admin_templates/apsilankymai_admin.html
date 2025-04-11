@@ -1,0 +1,86 @@
+<table id="myTable" class="display">
+    <thead>
+        <tr>
+            <th>El. paštas</th>
+            <th>Tel.nr</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>Paslaugos id</th>
+            <th>Data</th>
+            <th>Laikas</th>
+            <th>Darbutotojas</th>
+            <th>Status</th>
+            {% if current_user.role in ['admin', 'employee'] %}
+            <th>Veiksmai</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for uzsakymas in orders %}
+        <tr data-id="{{ uzsakymas.id }}">
+            <td class="email">{{ uzsakymas.email }}</td>
+            <td class="tel_nr">{{ uzsakymas.tel_nr }}</td>
+            <td class="first_name">{{ uzsakymas.first_name }}</td>
+            <td class="last_name">{{ uzsakymas.last_name }}</td>
+            <td class="service_id">{{ uzsakymas.service_id }}</td>
+            <td class="date">{{ uzsakymas.date }}</td>
+            <td class="time">{{ uzsakymas.time }}</td>
+            <td class="employee">
+                {{ get_user_by_id(uzsakymas.user_id).first_name }}
+                {{ get_user_by_id(uzsakymas.user_id).last_name }}
+            </td>
+            <td class="status select">{{ uzsakymas.status }}</td>
+            {% if current_user.role in ['admin', 'employee'] %}
+            <td>
+                <a href="#" class="text-primary mx-2" title="View" onclick="viewUzsakymas(event, {{ uzsakymas.id }})">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a href="#" class="text-info mx-2" title="Edit" onclick="enableEditApsilankymai(event, {{ uzsakymas.id }})">
+                    <i class="fa fa-pencil-alt"></i>
+                </a>
+                <a href="#" class="text-danger mx-2" title="Delete" onclick="deleteUzsakymas({{ uzsakymas.id }})">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="viewUzsakymasModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p><strong>El. paštas:</strong> <span id="view-email"></span></p>
+                <p><strong>Tel.nr:</strong> <span id="view-tel-nr"></span></p>
+                <p><strong>Paslauga:</strong> <span id="view-service-id"></span></p>
+                <p><strong>Data:</strong> <span id="view-date"></span></p>
+                <p><strong>Laikas:</strong> <span id="view-time"></span></p>
+                <p><strong>Gydytojas:</strong> <span id="view-employee"></span></p>
+                <p><strong>Klientas:</strong> <span id="view-uzsakovas"></span></p>
+                <p><strong>Statusas:</strong> <span id="view-status"></span></p>
+                <p><strong>Rūšis:</strong> <span id="view-species"></span></p>
+                <p><strong>Gyvūno vardas:</strong> <span id="view-animal-name"></span></p>
+                <p><strong>Simptomai:</strong> <span id="view-symptoms"></span></p>
+                <p><strong>Gydymas:</strong> <span id="view-gydymas"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // Initialize DataTables
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = new DataTable('#myTable');
+    });
+
+</script>

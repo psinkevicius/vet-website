@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div id="hero">
+    <div class="hero-container">
+        <div>
+            <h1>Stiprus<span></span></h1>
+            <h1>Gyvenantis<span></span></h1>
+            <h1>Laisvai <span></span></h1>
+            <a href="{{ url_for('auth.apie_mus') }}" class="home-btn">Sužinoti daugiau</a>
+        </div>
+    </div>
+</div>
+<!-- End Hero Section -->
+
+
+<div id="feedback-section" class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="section-title-feedback">Atsiliepimai</h2>
+        <a href="{{ url_for('auth.leave_feedback') }}" class="feedback-fa" title="Palikti atsiliepimą">
+            <i class="fa fa-plus"></i>
+        </a>
+    </div>
+
+    <!-- Bootstrap 4 Carousel -->
+    <div id="feedbackCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            {% for feedback in feedbacks|batch(3) %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <div class="row justify-content-center flex-wrap">
+                    {% for item in feedback %}
+                    <div class="col-md-4 col-sm-12 d-flex align-items-stretch justify-content-center">
+                        <div class="card shadow-lg border-0 rounded-lg">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="feedback-avatar">
+                                        <i class="fa fa-user-circle text-secondary" style="font-size: 3rem;"></i>
+                                    </div>
+                                    <div class="ms-3">
+                                        <h5 class="card-title text-primary mb-0">
+                                            {% if item.author %}
+                                                {{ item.author.first_name }} {{ item.author.last_name }}
+                                            {% else %}
+                                                Anonimas
+                                            {% endif %}
+                                        </h5>
+                                        <p class="text-muted small mb-0">{{ item.date_posted.strftime('%Y-%m-%d') }}</p>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    {% for _ in range(item.rating) %}
+                                    <i class="fa fa-star text-warning"></i>
+                                    {% endfor %}
+                                    {% for _ in range(5 - item.rating) %}
+                                    <i class="fa fa-star text-secondary"></i>
+                                    {% endfor %}
+                                </div>
+                                <p class="card-text text-muted card-text-truncated">"{{ item.comment }}"</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Carousel Controls -->
+        <a class="carousel-control-prev" href="#feedbackCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Ankstesnis</span>
+        </a>
+        <a class="carousel-control-next" href="#feedbackCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Kitas</span>
+        </a>
+    </div>
+</div>
+
+
+{% endblock %}

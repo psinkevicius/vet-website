@@ -1,0 +1,50 @@
+<!-- templates/signup.html -->
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="signup-page">
+    <div class="signup-container">
+        <div class="text-center mb-3">
+            <i class="fa fa-user-plus avatar-icon" aria-hidden="true"></i> <!-- Font Awesome icon for registration -->
+        </div>
+        <h3 class="text-center">Registracija</h3>
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">El. paštas</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Įveskite el. paštą" required />
+            </div>
+            <div class="form-group">
+                <label for="firstName">Vardas</label>
+                <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Jūsų vardas" required />
+            </div>
+            <div class="form-group">
+                <label for="lastName">Pavardė</label>
+                <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Jūsų pavardė" required />
+            </div>
+            <div class="form-group">
+                <label for="password1">Slaptažodis</label>
+                <input type="password" class="form-control" id="password1" name="password1" placeholder="Įveskite slaptažodį" required />
+            </div>
+            <div class="form-group">
+                <label for="password2">Slaptažodis (patvirtinti)</label>
+                <input type="password" class="form-control" id="password2" name="password2" placeholder="Patvirtinti slaptažodį" required />
+            </div>
+<!--
+            <div class="form-group">
+                <label for="role">Jūs esate:</label>
+                <select class="form-control" id="role" name="role" required>
+                    <option value="customer">Klientas</option>
+                    <option value="admin">Admin</option>
+                    <option value="employee">Darbuotojas</option>
+                </select>
+            </div>
+-->
+            <button type="submit" id="coloured-button" class="btn coloured-button w-50 mt-4">Registruotis</button>
+        </form>
+        <div class="text-center mt-2">
+            Turite paskyrą? <a href="/login" class="text-primary">Prisijungti</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

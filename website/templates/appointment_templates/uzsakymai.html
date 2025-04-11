@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% block title %}Vizitai{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container mt-5">
+    <!-- Search Form -->
+    <form method="GET" action="{{ url_for('appointment.uzsakymai') }}" class="mb-4">
+        <div class="input-group w-50" >
+            <input type="text" name="search" class="form-control" value="{{ search_query }}">
+            <button class="btn coloured-button" type="submit">Ieškoti</button>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4"> <!-- Two cards per row for larger screens -->
+        {% for uzsakymas in orders %}
+        <div class="col">
+            <div class="card shadow-lg border-0 rounded-lg p-5 h-100" style="min-height: 450px;"> <!-- Adjust min-height for larger size -->
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title text-primary">{{ uzsakymas.service.name }}</h3> <!-- Larger title -->
+                        <div>
+                            {% if current_user.role == 'employee' %}
+                            <span id="status-display-{{ uzsakymas.id }}" class="badge
+                                {% if uzsakymas.status == 'Vykdoma' %}badge-warning
+                                {% elif uzsakymas.status == 'Atlikta' %}badge-success
+                                {% else %}badge-danger{% endif %}">
+                                {{ uzsakymas.status }}
+                            </span>
+                            <i class="fa fa-edit text-primary ml-2 cursor-pointer" style="cursor: pointer;" onclick="enableEditStatus({{ uzsakymas.id }})"></i>
+
+                            <button class="btn btn-sm btn-danger ml-2" onclick="deleteAppointment({{ uzsakymas.id }})" title="Delete Appointment">
+                                <i class="fa fa-trash"></i>
+                            </button>
+
+                            <div id="edit-status-{{ uzsakymas.id }}" class="d-none mt-2">
+                                <select id="new-status-{{ uzsakymas.id }}" class="form-control">
+                                    <option value="Vykdoma" {% if uzsakymas.status == 'Vykdoma' %}selected{% endif %}>Vykdoma</option>
+                                    <option value="Atlikta" {% if uzsakymas.status == 'Atlikta' %}selected{% endif %}>Atlikta</option>
+                                    <option value="Atšaukta" {% if uzsakymas.status == 'Atšaukta' %}selected{% endif %}>Atšaukta</option>
+                                </select>
+                                <button class="btn btn-sm btn-success mt-2" onclick="saveStatus({{ uzsakymas.id }})">Išsaugoti</button>
+                                <button class="btn btn-sm btn-secondary mt-2" onclick="cancelEditStatus({{ uzsakymas.id }})">Atšaukti</button>
+                            </div>
+                            {% else %}
+                            <span class="badge
+                                {% if uzsakymas.status == 'Vykdoma' %}badge-warning
+                                {% elif uzsakymas.status == 'Atlikta' %}badge-success
+                                {% else %}badge-danger{% endif %}">
+                                {{ uzsakymas.status }}
+                            </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box text-center bg-light rounded-circle p-4 me-4">
+                            <i class="fa fa-calendar text-success" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Data ir laikas</h5>
+                            <div class="text-muted mb-0 d-flex align-items-center">
+                                <span id="date-time-{{ uzsakymas.id }}">{{ uzsakymas.date }} {{ uzsakymas.time }}</span>
+                                {% if current_user.role != 'customer' %}
+                                <i class="fa fa-edit text-primary ml-2 cursor-pointer" style="cursor: pointer;" onclick="enableEditDateTime({{ uzsakymas.id }})"></i>
+                                {% endif %}
+                            </div>
+                            <div class="d-none mt-2" id="edit-date-time-{{ uzsakymas.id }}">
+                                <input type="date" id="new-date-{{ uzsakymas.id }}" value="{{ uzsakymas.date }}" class="form-control d-inline-block w-50">
+                                <input type="time" id="new-time-{{ uzsakymas.id }}" value="{{ uzsakymas.time }}" class="form-control d-inline-block w-50">
+                                <button class="btn btn-sm btn-success mt-2" onclick="saveDateTime({{ uzsakymas.id }})">Išsaugoti</button>
+                                <button class="btn btn-sm btn-secondary mt-2" onclick="cancelEditDateTime({{ uzsakymas.id }})">Atšaukti</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box text-center bg-light rounded-circle p-4 me-4">
+                            <i class="fa fa-user-md text-warning" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Gydytojas</h5>
+                            <p class="text-muted mb-0">{{ get_user_by_id(uzsakymas.user_id).first_name }} {{ get_user_by_id(uzsakymas.user_id).last_name }}</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box text-center bg-light rounded-circle p-4 me-4">
+                            <i class="fa fa-paw text-danger" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Augintinis</h5>
+                            <p class="text-muted mb-0">{{ uzsakymas.animal_name }} ({{ uzsakymas.species }})</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box text-center bg-light rounded-circle p-4 me-4">
+                            <i class="fa fa-info-circle text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Simptomai</h5>
+                            <p class="text-muted mb-0">{{ uzsakymas.symptoms | default('N/A') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="icon-box text-center bg-light rounded-circle p-4 me-4">
+                            <i class="fa fa-thermometer-full text-primary" style="font-size: 2rem;"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-1 fw-bold">Gydymas</h5>
+                            <!-- Initially hidden treatment text -->
+                            <p id="treatment-display-{{ uzsakymas.id }}" class="text-muted mb-0">
+                                {{ uzsakymas.treatment }}
+                                {% if current_user.role != 'customer' %}
+                                <i class="fa fa-edit text-primary ml-2 cursor-pointer" style="cursor: pointer;" onclick="showTreatmentInput({{ uzsakymas.id }})"></i>
+                                {% endif %}
+                            </p>
+
+                            <!-- Hidden treatment input and button -->
+                            <div id="edit-treatment-{{ uzsakymas.id }}" class="d-none">
+                                <textarea id="treatment-{{ uzsakymas.id }}" class="form-control mb-2" rows="4">{{ uzsakymas.treatment }}</textarea>
+                                <button class="btn btn-sm btn-success mt-2" onclick="saveTreatment({{ uzsakymas.id }})">Išsaugoti komentarą</button>
+                                <button class="btn btn-sm btn-secondary mt-2" onclick="cancelTreatmentEdit({{ uzsakymas.id }})">Atšaukti</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('appointment.uzsakymai', page=pagination.prev_num, search=search_query) }}" aria-label="Previous">
+                    &laquo;
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+            {% endif %}
+
+            {% for page_num in range(1, pagination.pages + 1) %}
+            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('appointment.uzsakymai', page=page_num, search=search_query) }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('appointment.uzsakymai', page=pagination.next_num, search=search_query) }}" aria-label="Next">
+                    &raquo;
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+
+
+
+
+
+
+<script>
+function enableEditDateTime(appointmentId) {
+    document.getElementById(`date-time-${appointmentId}`).classList.add("d-none");
+    document.getElementById(`edit-date-time-${appointmentId}`).classList.remove("d-none");
+}
+
+function cancelEditDateTime(appointmentId) {
+    document.getElementById(`date-time-${appointmentId}`).classList.remove("d-none");
+    document.getElementById(`edit-date-time-${appointmentId}`).classList.add("d-none");
+}
+
+function saveDateTime(appointmentId) {
+    const newDate = document.getElementById(`new-date-${appointmentId}`).value;
+    const newTime = document.getElementById(`new-time-${appointmentId}`).value;
+
+    fetch(`/uzsakymai/update-datetime/${appointmentId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ date: newDate, time: newTime })
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById(`date-time-${appointmentId}`).textContent = `${newDate} ${newTime}`;
+            cancelEditDateTime(appointmentId);
+        } else {
+            alert("Nepavyko atnaujinti datos ir laiko.");
+        }
+    })
+    .catch(() => alert("Įvyko klaida. Bandykite dar kartą."));
+}
+
+function deleteAppointment(appointmentId) {
+    if (!confirm("Ar tikrai norite ištrinti šį apsilankymą?")) {
+        return;
+    }
+
+    fetch(`/uzsakymai/delete/${appointmentId}`, {
+        method: "POST"
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Apsilankymas sėkmingai ištrintas.");
+            location.reload();
+        } else {
+            alert("Nepavyko ištrinti apsilankymo.");
+        }
+    })
+    .catch(() => alert("Įvyko klaida. Bandykite dar kartą."));
+}
+
+function enableEditStatus(appointmentId) {
+    document.getElementById(`status-display-${appointmentId}`).classList.add("d-none");
+    document.getElementById(`edit-status-${appointmentId}`).classList.remove("d-none");
+}
+
+function cancelEditStatus(appointmentId) {
+    document.getElementById(`status-display-${appointmentId}`).classList.remove("d-none");
+    document.getElementById(`edit-status-${appointmentId}`).classList.add("d-none");
+}
+
+function saveStatus(appointmentId) {
+    const saveButton = document.querySelector(`#edit-status-${appointmentId} button.btn-success`);
+    const saveButtonText = saveButton.innerHTML; // Store the original text
+    saveButton.innerHTML = `
+        <div class="spinner-border spinner-border-sm text-light" role="status"></div>
+    `; // Replace text with spinner
+    saveButton.disabled = true; // Disable the button
+
+    const newStatus = document.getElementById(`new-status-${appointmentId}`).value;
+
+    fetch(`/uzsakymai/update-status/${appointmentId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
+    })
+    .then(response => {
+        if (response.ok) {
+            document.getElementById(`status-display-${appointmentId}`).textContent = newStatus;
+            document.getElementById(`status-display-${appointmentId}`).className = `badge ${
+                newStatus === "Vykdoma"
+                    ? "badge-warning"
+                    : newStatus === "Atlikta"
+                    ? "badge-success"
+                    : "badge-danger"
+            }`;
+            cancelEditStatus(appointmentId);
+            alert("Būsena atnaujinta ir pranešimai sėkmingai išsiųsti!");
+        } else {
+            alert("Būsena atnaujinta ir pranešimai sėkmingai išsiųsti!");
+        }
+    })
+    .catch(() => alert("Įvyko klaida. Bandykite dar kartą."))
+    .finally(() => {
+        saveButton.innerHTML = saveButtonText; // Restore the button text
+        saveButton.disabled = false; // Re-enable the button
+    });
+}
+
+function showTreatmentInput(appointmentId) {
+    // Hide the display element
+    document.getElementById(`treatment-display-${appointmentId}`).classList.add("d-none");
+
+    // Show the textarea and buttons
+    document.getElementById(`edit-treatment-${appointmentId}`).classList.remove("d-none");
+}
+
+function cancelTreatmentEdit(appointmentId) {
+    // Show the display element
+    document.getElementById(`treatment-display-${appointmentId}`).classList.remove("d-none");
+
+    // Hide the textarea and buttons
+    document.getElementById(`edit-treatment-${appointmentId}`).classList.add("d-none");
+}
+
+function saveTreatment(appointmentId) {
+    const treatment = document.getElementById(`treatment-${appointmentId}`).value;
+
+    fetch(`/uzsakymai/update-treatment/${appointmentId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ treatment: treatment })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            alert(`Nepavyko išsaugoti gydymo: ${data.error}`);
+        } else {
+            // Update the treatment display with the new value
+            const treatmentDisplay = document.getElementById(`treatment-display-${appointmentId}`);
+            treatmentDisplay.innerHTML = `
+                ${treatment}
+                <i class="fa fa-edit text-primary ml-2 cursor-pointer" style="cursor: pointer;" onclick="showTreatmentInput(${appointmentId})"></i>
+            `;
+
+            // Hide the input and show the updated display
+            cancelTreatmentEdit(appointmentId);
+        }
+    })
+    .catch(() => alert("Įvyko klaida. Bandykite dar kartą."));
+}
+
+
+</script>
+{% endblock %}

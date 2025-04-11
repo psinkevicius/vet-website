@@ -1,0 +1,1257 @@
+/* General body styling */
+body {
+    background-color: #f5f5f5; /* Soft green background color */
+    font-family: 'Montserrat', sans-serif;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
+.container-fluid{
+    margin: 0;
+    padding: 0;
+}
+
+
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin-left: 0 !important;
+}
+
+.content {
+    flex: 1;
+}
+/* General body styling */
+
+
+/* Top Header */
+.top-header {
+    background-color: #f0f5f5;
+    font-size: 1.25rem;
+    height: 8vh;
+    min-height: 50px;
+    max-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.social-icons a {
+    color: #50545d;
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.social-icons a:hover {
+    color: #007bff;
+}
+
+.address-info {
+    margin-right: 20px;
+}
+
+.location-info {
+    margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+    .top-header {
+        height: auto;
+        padding: 10px;
+        font-size: 1rem;
+    }
+}
+/* Top Header */
+
+
+
+
+
+
+/* Navbar */
+/* Navbar */
+.navbar {
+    height: auto; /* Allow auto height for responsiveness */
+    min-height: 60px; /* Set a minimum height */
+    padding: 10px 20px; /* Add padding for better spacing */
+}
+
+.navbar .container {
+    justify-content: center !important;
+    flex-wrap: wrap; /* Wrap items if they don't fit */
+}
+
+.navbar-brand {
+    font-size: 1.8rem; /* Scale font size */
+    text-align: center; /* Center brand for small screens */
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #f0f0f0 !important;
+    margin-right: 15px !important;
+    font-size: 1rem; /* Scale font size */
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #d0d0d0 !important;
+}
+
+.navbar-collapse {
+    z-index: 5 !important;
+    justify-content: center; /* Center items */
+}
+
+.navbar-nav .nav-item {
+    padding: 8px !important;
+    flex: 1; /* Distribute space evenly */
+    text-align: center; /* Center-align text */
+}
+
+/* Styling for "Registracija internetu" button */
+.btn-register {
+    color: white !important;
+    font-weight: bold !important;
+    padding: 8px 16px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+    font-size: 0.9rem; /* Scale font size */
+}
+
+.btn-register:hover {
+    background-color: #7f9c7e !important;
+    color: white !important;
+}
+
+/* Styling for "Atsijungti" button */
+.navbar .btn-secondary {
+    background-color: #343A40 !important;
+    color: white !important;
+    font-weight: bold !important;
+    padding: 8px 16px !important;
+    text-transform: uppercase !important;
+    border: none !important;
+    font-size: 0.9rem; /* Scale font size */
+}
+
+.navbar .btn-secondary:hover {
+    background-color: #7f9c7e !important;
+    color: white !important;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .navbar {
+        height: auto; /* Allow height to adjust dynamically */
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+
+    .navbar-brand {
+        font-size: 1.5rem; /* Reduce brand font size */
+    }
+
+    .navbar-dark .navbar-nav .nav-link {
+        margin-right: 10px !important;
+        font-size: 0.9rem; /* Smaller font size for links */
+    }
+
+    .btn-register, .btn-secondary {
+        padding: 6px 12px !important; /* Reduce button padding */
+        font-size: 0.85rem; /* Smaller font size for buttons */
+    }
+
+    .navbar-nav {
+        flex-direction: column; /* Stack nav items vertically */
+        text-align: center; /* Center align nav items */
+    }
+}
+
+/* Styling for "Atsijungti" button */
+/* navbar */
+
+
+
+
+
+/* Styling for flash messages */
+.alert-dismissible.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1s ease-out, visibility 0s linear 1s; /* 3s fade-out */
+}
+
+.alert {
+    height: 3.5vw; /* Adjust height as needed */
+    margin-right: 5px;
+    display: flex; /* Enable flexbox */
+    justify-content: center; /* Horizontally center the text */
+    align-items: center; /* Vertically center the text */
+    text-align: center; /* Ensure the text aligns properly */
+}
+
+
+.flash-container {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 1050; /* Ensure it appears above other content */
+}
+/* Styling for flash messages */
+
+
+
+
+
+/* Footer Styling */
+.footer {
+ display: flex;
+ justify-content: center;
+}
+
+.footer a {
+    color: #b0b0b0;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+.footer h5 {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.footer .social-icons a {
+    color: #b0b0b0;
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+.footer .social-icons a:hover {
+    color: #ffffff;
+}
+
+.footer-logo img {
+    width: 80px;
+}
+
+.gallery {
+    gap: 5px;
+}
+
+.gallery .gallery-img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+.working-hours {
+    background-color: #333;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.working-hours h6, .working-hours p {
+    margin-bottom: 8px;
+}
+
+.footer-bottom {
+    background-color: #111;
+    color: #666;
+    font-size: 14px;
+}
+/* Footer Styling */
+
+
+
+
+/* Login, Forgot Password, and Signup Pages */
+.login-page,
+.forgot-password-page,
+.signup-page,
+.verify-code-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding-top: 60px;
+}
+
+.login-container,
+.forgot-password-container,
+.signup-container,
+.verify-code-container {
+    width: 500px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+
+h3.text-center {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+
+.avatar-icon {
+    font-size: 100px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.5rem 0;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.text-primary {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.text-primary:hover {
+    color: #0056b3;
+}
+/* Login, Forgot Password, and Signup Pages */
+
+
+
+/* admin page */
+.container-fluid{
+padding-left: 0px !important;
+padding-right: 0px !important;
+}
+
+.wrapper .content-wrapper {
+    margin-left: 250px !important;
+}
+
+naudotojaiC {
+        margin-top: 0px !important;
+        padding-top: 0px !important;
+    }
+/* admin page */
+
+/*uzsakymai puslapis*/
+.icon-box {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner-border {
+    vertical-align: middle;
+}
+/*uzsakymai puslapis*/
+
+/* General Uzrasai Page Styling */
+.notes-page {
+    display: flex;
+    justify-content: center;
+}
+
+.notes-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.notes-list-container {
+    flex: 1;
+    background-color: #f0f5f5;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.list-group {
+    max-height: 750px;
+    overflow-y: auto;
+}
+
+.note-editor-container {
+    flex: 2;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for Quill Editor */
+#editor-container {
+    height: 700px;
+    border-radius: 8px;
+}
+
+
+.note-item {
+    display: flex;
+    justify-content: space-between;
+    background-color: #e8f7f7;
+    border: 1px solid #cce3e3;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+.note-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.note-item:hover {
+    background-color: #cce3e3;
+}
+
+.note-tags {
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.note-tags:hover {
+    color: #0056b3;
+}
+
+.note-item:active {
+    background-color: #b3d3d3;
+    box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.1s ease;
+}
+
+.note-date {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 4px;
+}
+
+.note-item .note-content {
+    margin-right: 10px;
+}
+
+/* Pin icon */
+.note-item button {
+    background-color: transparent;
+    border: none;
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+/* Pin icon */
+
+.btn-add-note {
+    background-color: #9fb59c;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.5s ease;
+}
+
+.btn-add-note:hover {
+    background-color: #7f9c7e;
+}
+
+.search-bar input {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #cce3e3;
+    margin-bottom: 15px;
+}
+
+.icon-paw {
+    font-size: 2.5rem;
+    color: #9fb59c;
+    margin-right: 5px;
+}
+
+.icon-delete {
+    color: #ff6b6b;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.icon-pin {
+    margin-left: -150px;
+}
+
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+    .notes-container {
+        flex-direction: column;
+    }
+
+    #editor-container {
+        height: 200px;
+    }
+}
+/* General Notes Page Styling */
+
+
+
+/* Hero Section */
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 10vh 20px; /* Dynamic vertical padding */
+    text-align: center; /* Center align text */
+}
+
+#hero {
+	background-image: url('/static/photo/dog-background2.jpg');
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	min-height: 80vh;
+	z-index: 0;
+}
+
+.home-btn {
+	display: inline-block;
+	padding: 10px 30px;
+	color: #7f9c7e;
+	background-color: transparent;
+	border: 2px solid #7f9c7e;
+	font-size: 2rem;
+	text-transform: uppercase;
+	letter-spacing: 0.1rem;
+	margin-top: 30px;
+	transition: 0.3s ease;
+	transition-property: background-color, color;
+}
+.home-btn:hover {
+	color: white;
+	background-color: #7f9c7e;
+}
+
+#hero::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	background-color: black;
+	opacity: 0.7;
+	z-index: -1;
+}
+
+#hero h1 {
+	display: block;
+	width: fit-content;
+	font-size: 4rem;
+	position: relative;
+	color: transparent;
+	animation: text_reveal 0.5s ease forwards;
+	animation-delay: 1s;
+}
+#hero h1:nth-child(1) {
+	animation-delay: 1s;
+}
+#hero h1:nth-child(2) {
+	animation-delay: 2s;
+}
+#hero h1:nth-child(3) {
+	animation: text_reveal_name 0.5s ease forwards;
+	animation-delay: 3s;
+}
+#hero h1 span {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 0;
+	background-color: #7f9c7e;
+	animation: text_reveal_box 1s ease;
+	animation-delay: 0.5s;
+}
+#hero h1:nth-child(1) span {
+	animation-delay: 0.5s;
+}
+#hero h1:nth-child(2) span {
+	animation-delay: 1.5s;
+}
+#hero h1:nth-child(3) span {
+	animation-delay: 2.5s;
+}
+/* Keyframes */
+
+@keyframes text_reveal_box {
+	50% {
+		width: 100%;
+		left: 0;
+	}
+	100% {
+		width: 0;
+		left: 100%;
+	}
+}
+@keyframes text_reveal {
+	100% {
+		color: white;
+	}
+}
+@keyframes text_reveal_name {
+	100% {
+		color: #7f9c7e;
+		font-weight: 500;
+	}
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #hero {
+        min-height: 60vh; /* Shorter height on smaller screens */
+    }
+
+    #hero h1 {
+        font-size: 2rem; /* Adjust font size */
+    }
+
+    .home-btn {
+        font-size: 1rem; /* Smaller button text */
+        padding: 8px 16px;
+    }
+}
+/* End Keyframes */
+/* End Hero Section */
+
+
+
+
+/* Live chat styling */
+.chat-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #9fb59c;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-popup {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 300px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-popup.show {
+            display: block;
+        }
+
+        .chat-header {
+            background-color: #9fb59c;
+            color: white;
+            padding: 10px;
+        }
+
+        .chat-body {
+            padding: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-footer input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .chat-footer button {
+            background-color: #9fb59c;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .user-message, .bot-message {
+            margin: 5px;
+            padding: 8px;
+            border-radius: 5px;
+            white-space: normal; /* Allows text to wrap */
+            word-wrap: break-word; /* Breaks long words if necessary */
+            max-width: 100%; /* Ensures messages don’t exceed 80% of the chat window width */
+        }
+
+        .user-message {
+            background-color: #e9ecef;
+            text-align: right;
+        }
+
+        .bot-message {
+            background-color: #d1ecf1;
+            text-align: left;
+        }
+/* Live chat styling */
+
+
+
+
+
+/* styling for select_service page */
+/* Progress Tracker Styling */
+.progress-tracker {
+    display: flex;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+}
+
+.step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    height: 2px;
+    width: 100%;
+    background-color: #ddd;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.step.active ~ .step::after {
+    background-color: #ddd;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #9fb59c;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    z-index: 2;
+}
+
+.step.active .circle {
+    background-color: #5b8750;
+}
+
+.label {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.step.active .label {
+    color: #5b8750;
+    font-weight: bold;
+}
+/* Progress tracker styling */
+
+.appointment-container {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.row {
+    width: 100%;
+}
+
+.dropdown-section,
+.clndr-container {
+    padding: 20px;
+}
+/* General Styling for Appointment Section */
+.appointment-container {
+    padding: 20px;
+}
+
+.dropdown-section, .clndr-container {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f8f9fa; /* Subtle background for contrast */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Calendar Styling */
+.clndr-container {
+    background-color: #e0eddf;
+    border-radius: 10px;
+    padding: 20px;
+    height: auto; /* Ensure it adjusts to content */
+}
+
+.clndr-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #9fb59c;
+    color: white;
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    font-weight: bold;
+}
+
+.clndr-prev-button, .clndr-next-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.days-of-the-week, .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.header-day, .day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0eddf;
+    border-radius: 5px;
+    padding: 10px;
+    color: #333;
+    font-weight: bold;
+}
+
+.day.selected {
+    background-color: #7f9c7e;
+    color: white;
+}
+
+.day:hover {
+    background-color: #b0cdb1;
+    cursor: pointer;
+}
+
+.non-working-day {
+    color: gray;
+    background-color: #f8f9fa;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .appointment-container {
+        padding: 10px;
+    }
+
+    .dropdown-section, .clndr-container {
+        padding: 15px;
+        margin-bottom: 20px; /* Add spacing between sections */
+    }
+
+    .dropdown-section, .clndr-container {
+        width: 100%; /* Full-width for smaller screens */
+    }
+
+    .clndr-controls {
+        flex-direction: column; /* Stack controls vertically */
+        text-align: center;
+    }
+
+    .clndr-prev-button, .clndr-next-button {
+        margin: 5px 0; /* Add spacing between buttons */
+    }
+}
+
+
+/* Submit button styling */
+.button-section .btn-primary {
+    background-color: #9fb59c !important;
+    border-color: #9fb59c !important;
+}
+
+
+.button-section .btn-primary:hover {
+    background-color: #7f9c7e !important;
+    border-color: #7f9c7e !important;
+}
+
+/* Submit button styling */
+
+
+/* google button styling */
+.google-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #757575; /* Gray color for text */
+    border: 1px solid #ddd; /* Light border */
+    padding: 8px 16px; /* Button padding */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-decoration: none; /* Remove underline */
+    font-weight: bold;
+}
+
+.google-btn i {
+    color: #DB4437; /* Google red color */
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.2rem; /* Larger icon size */
+}
+
+.google-btn:hover {
+    background-color: #f9f9f9; /* Slightly darker background on hover */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); /* Stronger shadow on hover */
+    text-decoration: none; /* Keep underline removed */
+}
+
+.google-btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 3px 2px rgba(66, 133, 244, 0.5); /* Blue outline for focus */
+}
+
+/*google button styling */
+
+/* button styling */
+.coloured-button {
+    background-color: #9fb59c !important;
+    border-color: #9fb59c !important;
+    font-weight: bold;
+    color: white;
+}
+
+.coloured-button:hover {
+    background-color: #7f9c7e !important;
+    border-color: #7f9c7e !important;
+    font-weight: bold;
+    color: white;
+}
+
+/*button styling */
+
+
+/* General Feedback Section Styling */
+#feedback-section {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+/* Card Styling */
+#feedback-section .card {
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+}
+
+#feedback-section .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feedback-avatar {
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-text-truncated {
+    max-height: 4rem; /* Set a maximum height for the text */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis (...) for truncated text */
+    display: -webkit-box; /* Use for multiline truncation */
+    -webkit-line-clamp: 2; /* Number of lines to show */
+    -webkit-box-orient: vertical; /* Box orientation for truncation */
+    word-wrap: break-word; /* Handle long words properly */
+}
+/* Feedback Title and Icon */
+.section-title-feedback {
+    color: #7f9c7e;
+    font-weight: bold;
+    text-align: center; /* Center-align the title */
+}
+
+.feedback-fa {
+    font-size: 30px;
+    color: #9fb59c;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.feedback-fa:hover {
+    color: #7f9c7e; /* Darker color on hover */
+}
+
+.feedback-fa i {
+    font-size: 50px;
+}
+
+/* Carousel Controls */
+.carousel-control-prev, .carousel-control-next {
+    width: 5%; /* Reduce width to keep buttons compact */
+    color: #9fb59c;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+    color: #7f9c7e;
+}
+
+.carousel-inner {
+    margin-bottom: 20px;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: #9fb59c;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
+.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+    background-color: #7f9c7e;
+}
+
+/* Rating Stars */
+.rating-star {
+    font-size: 1.5rem;
+    color: #ffcc00; /* Gold for filled stars */
+    margin: 0 3px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #feedback-section .d-flex {
+        flex-direction: column; /* Stack title and icon */
+        align-items: center;
+    }
+
+    .feedback-fa {
+        font-size: 24px;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        left: 10px;
+        right: 10px;
+    }
+
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: 25px;
+        height: 25px;
+    }
+
+    .carousel-inner .row {
+        display: flex;
+        flex-direction: column; /* Stack feedback cards on smaller screens */
+    }
+
+    .feedback-avatar {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+
+/* galery photos styling */
+.gallery-img {
+    width: 30%; /* Adjust the size */
+    margin: 5px;
+    cursor: pointer;
+}
+/* galery photos styling */
+
+
+/* calendar prev button*/
+.clndr-prev-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+/* styling for select_service page */
+
+/* styling for select_time page */
+.time-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+
+.time-slot {
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    background-color: #e0eddf;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+    color: black;
+}
+
+.time-slot:hover {
+    background-color: #b0cdb1;
+}
+
+.time-slot.selected {
+    background-color: #7f9c7e;
+    font-weight: bold;
+    color: white;
+    outline: none;
+}
+
+
+
+/* styling for select_time page */
+
+
+/*custom logos*/
+.custom-icon {
+        color: #9fb59c;
+        font-size: 40px;
+    }
+
+.custom-icon2 {
+        color: #9fb59c;
+        font-size: 80px;
+    }
+
+.custom-icon3 {
+        color: #7f9c7e;
+        font-size: 40px;
+    }
+/*custom logos*/
+
+/* about us styling */
+.custom-title {
+    color: #9fb59c;
+    font-weight: bold;
+}
+
+.custom-card {
+    transition: transform 0.3s ease-in-out;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+}
+
+.custom-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.custom-icon3 {
+    font-size: 2.5rem;
+    color: #9fb59c;
+}
+
+.accordion-button:hover {
+    background-color: #9fb59c !important;
+    color: white;
+}
+
+/* Styling for the button */
+.btn-icon {
+    background-color: #7f9c7e !important; /* Set background color */
+    border: none !important;             /* Remove any border */
+    border-radius: 10%;                  /* Slightly rounded corners */
+    width: 40px;                         /* Adjust width */
+    height: 40px;                        /* Adjust height */
+    display: flex;                       /* Flexbox for centering */
+    align-items: center;                 /* Vertically center the content */
+    justify-content: center;             /* Horizontally center the content */
+    padding: 0;
+    margin-left: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better visibility */
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.btn-icon i {
+    color: white !important;             /* Set icon color */
+    font-size: 20px;                     /* Adjust icon size */
+    transition: transform 0.2s ease-in-out; /* Smooth icon transformation */
+}
+
+.btn-icon:hover {
+    transform: scale(1.1);               /* Add hover effect */
+}
+
+.rotating {
+    transform: rotate(180deg);           /* Rotation for smooth transition */
+}
+
+/* about us styling */
+
+/* Highlight Errors and Warnings */
+.log-line[data-level="ERROR"] {
+    background-color: rgba(255, 0, 0, 0.2);
+    font-weight: bold;
+}
+.log-line[data-level="WARNING"] {
+    background-color: rgba(255, 255, 0, 0.2);
+}
+
+

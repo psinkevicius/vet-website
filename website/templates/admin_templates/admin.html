@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+
+<!-- Wrapper for sidebar and content -->
+<div class="wrapper">
+
+    <button class="btn btn-dark" data-widget="pushmenu" aria-label="Toggle Sidebar">
+    <i class="fas fa-chevron-right"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <!-- Brand Logo -->
+        <a href="/admin" class="brand-link">
+            <span class="brand-text font-weight-light">Administratoriaus skydas</span>
+        </a>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <li class="nav-item">
+                         <a href="#" class="nav-link" onclick="loadContent('/admin/apsilankymai_admin')">
+                            <i class="nav-icon fas fa-calendar"></i>
+                            <p>Apsilankymai</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="loadContent('/admin/naudotojai')">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Naudotojai</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="loadContent('/admin/darbuotojai')">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Darbuotojai</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="loadContent('/admin/logs')">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Žurnalas</p>
+                        </a>
+                    </li>
+                   <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="toggleSubmenu(event, 'services-menu')">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>Paslaugos <i class="right fas fa-angle-left"></i></p>
+                        </a>
+                        <ul class="nav nav-treeview" id="services-menu" style="display: none;">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" onclick="loadContent('/admin/services/manage')">
+                                    <i class="fas fa-list nav-icon"></i>
+                                    <p>Valdyti Paslaugas</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" onclick="loadContent('/admin/services/add-service')">
+                                    <i class="fas fa-plus nav-icon"></i>
+                                    <p>Pridėti Paslaugą</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link" onclick="loadContent('/admin/services/add-category')">
+                                    <i class="fas fa-plus nav-icon"></i>
+                                    <p>Pridėti Kategoriją</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content">
+            <div id="main-content" class="container-fluid">
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+</div>
+<!-- /.wrapper -->
+
+<!-- Load jQuery first -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Load DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+<!-- AdminLTE CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+<!-- AdminLTE JS (must come after jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/js/adminlte.min.js"></script>
+
+
+
+<script>
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.main-sidebar');
+    const contentWrapper = document.querySelector('.content-wrapper');
+
+    sidebar.classList.toggle('hidden'); // Toggle visibility of sidebar
+    contentWrapper.classList.toggle('sidebar-collapsed'); // Adjust content layout
+}
+
+function loadContent(url) {
+    fetch(url, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('Tinklo atsakas buvo netinkamas');
+            return response.text();
+        })
+        .then(html => {
+            // Inject the content into #main-content
+            document.getElementById('main-content').innerHTML = html;
+
+            // Reinitialize DataTables if needed
+            const table = document.querySelector('#myTable');
+            if (table) new DataTable('#myTable');
+
+            // Call setup functions to attach necessary listeners
+            initializeEditServiceListeners();
+            initializeAddUserListeners();
+        })
+        .catch(error => console.error('Klaida įkeliant turinį:', error));
+}
+
+function initializeEditServiceListeners() {
+    const editServiceForm = document.getElementById('editServiceForm');
+    if (editServiceForm) {
+        console.log('Edit Service Form is in the DOM');
+        editServiceForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const serviceId = this.dataset.serviceId;
+            if (!serviceId) {
+                alert('Trūksta paslaugos ID.');
+                return;
+            }
+
+            const updatedName = document.getElementById('editServiceName').value;
+            const updatedDescription = document.getElementById('editDescription').value;
+            const updatedPrice = document.getElementById('editPrice').value;
+            const updatedDuration = document.getElementById('editDuration').value;
+            const updatedCategoryId = document.getElementById('edit-category-dropdown').value;
+
+            if (!updatedName || !updatedDescription || !updatedPrice || !updatedDuration || !updatedCategoryId) {
+                alert('Visi laukai yra būtini.');
+                return;
+            }
+
+            fetch('/admin/services/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    service_id: serviceId,
+                    name: updatedName,
+                    description: updatedDescription,
+                    price: parseFloat(updatedPrice),
+                    duration: parseInt(updatedDuration),
+                    category_id: parseInt(updatedCategoryId),
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+
+                        const row = document.querySelector(`tr[data-id="${serviceId}"]`);
+                        if (row) {
+                            row.querySelector('td:nth-child(1)').innerText = updatedName;
+                            row.querySelector('td:nth-child(2)').innerText = updatedDescription;
+                            row.querySelector('td:nth-child(3)').innerText = updatedPrice;
+                            row.querySelector('td:nth-child(4)').innerText = updatedDuration;
+
+                            const categoryName = document.querySelector(
+                                `#edit-category-dropdown option[value="${updatedCategoryId}"]`
+                            ).textContent;
+                            row.querySelector('td:nth-child(5)').innerText = categoryName;
+                        }
+
+
+                        $('#editServiceModal').modal('hide');
+                    } else {
+                        alert(data.error || 'Nepavyko atnaujinti paslaugos.');
+                    }
+                })
+                .catch(error => console.error('Klaida:', error));
+        });
+    } else {
+        console.warn('Redaguoti paslaugos formą nėra DOM');
+    }
+}
+
+
+
+// Open the "Add User" modal
+function openAddUserModal() {
+    document.getElementById('addUserForm').reset();
+    $('#addUserModal').modal('show');
+}
+
+
+function initializeAddUserListeners() {
+    const addUserButton = document.querySelector('button[onclick="openAddUserModal()"]');
+    if (addUserButton) {
+        addUserButton.addEventListener('click', openAddUserModal);
+    }
+
+    const addUserForm = document.getElementById('addUserForm');
+    if (addUserForm) {
+        addUserForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('addUserEmail').value;
+            const firstName = document.getElementById('addUserFirstName').value;
+            const lastName = document.getElementById('addUserLastName').value;
+            const password = document.getElementById('addUserPassword').value;
+            const role = document.getElementById('addUserRole').value;
+
+            if (!email || !firstName || !lastName || !password) {
+                alert('Visi laukai yra būtini.');
+                return;
+            }
+
+            fetch('/admin/naudotojai/add-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, first_name: firstName, last_name: lastName, password, role }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Naudotojas sėkmingai pridėtas!');
+                        $('#addUserModal').modal('hide');
+                        loadContent('/admin/naudotojai');
+                    } else {
+                        alert(data.error || 'Nepavyko pridėti vartotojo.');
+                    }
+                })
+                .catch(error => console.error('Klaida:', error));
+        });
+    } else {
+        console.warn('Pridėti naudotojo formą nėra DOM');
+    }
+}
+</script>
+
+
+
+
+{% endblock %}

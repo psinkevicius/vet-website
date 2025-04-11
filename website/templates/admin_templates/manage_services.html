@@ -1,0 +1,115 @@
+
+<!-- Table to display all services -->
+<table id="myTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Pavadinimas</th>
+            <th>Aprašymas</th>
+            <th>Kaina</th>
+            <th>Trukmė</th>
+            <th>Kategorija</th>
+            <th>Darbutojai</th>
+            <th>Veiksmai</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for service in services %}
+        <tr data-id="{{ service.id }}">
+            <td>{{ service.name }}</td>
+            <td>{{ service.description }}</td>
+            <td>{{ service.price }}</td>
+            <td>{{ service.duration }}</td>
+            <td>{{ service.category.name }}</td>
+            <td>
+                {% if service.employees %}
+                    {% for employee in service.employees %}
+                        {{ employee.first_name }} {{ employee.last_name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <em>Darbuotojų nepaskirta</em>
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-info btn-sm" onclick="openEditModal({{ service.id }})">Keisti</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteService({{ service.id }})">Trinti</button>
+                <button class="btn btn-primary btn-sm" onclick="assignEmployees({{ service.id }})">Priskirti darbuotojus</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+<div id="editServiceModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Keisti paslaugą</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Edit Form -->
+        <form id="editServiceForm">
+          <div class="form-group">
+            <label for="editServiceName">Paslaugos pavadinimas</label>
+            <input type="text" class="form-control" id="editServiceName" required>
+          </div>
+          <div class="form-group">
+            <label for="editDescription">Aprašymas</label>
+            <textarea class="form-control" id="editDescription" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="editPrice">Kaina</label>
+            <input type="number" class="form-control" id="editPrice" required>
+          </div>
+          <div class="form-group">
+            <label for="editDuration">Trukmė (minutės)</label>
+            <input type="number" class="form-control" id="editDuration" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-category-dropdown">Kategorija:</label>
+            <select id="edit-category-dropdown" class="form-control"></select>
+          </div>
+          <button type="submit" class="btn btn-primary">Išsaugoti pakeitimus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+
+
+//load categories into edit service
+fetch('/admin/services/categories')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Nepavyko užkrauti kategorijų');
+        }
+        return response.json();
+    })
+    .then(categories => {
+        const categoryDropdown = document.getElementById('edit-category-dropdown');
+        categoryDropdown.innerHTML = ''; // Clear existing options
+
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category.id;
+            option.textContent = category.name;
+            categoryDropdown.appendChild(option);
+        });
+    })
+    .catch(error => console.error('Nepavyko užkrauti kategorijų:', error));
+
+
+
+
+
+</script>
+
+
+

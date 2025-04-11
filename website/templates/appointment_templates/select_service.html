@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% block title %}Select Service{% endblock %}
+
+{% block content %}
+{% set step_number = 1 %}
+{% include 'progress_tracker.html' %}
+
+
+
+<div class="container-fluid appointment-container">
+    <div class="row">
+        <!-- Left side (dropdown section) -->
+        <div class="col-md-6 col-sm-12 dropdown-section">
+            <!-- Dropdown form and button -->
+            <form id="appointment-form" action="{{ url_for('appointment.select_service') }}" method="POST">
+                <div class="form-group">
+                    <label for="category">Kategorija</label>
+                    <select class="form-control" id="category" name="category_id" required>
+                        <option value="" disabled selected>Pasirinkite kategoriją</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="service">Paslauga</label>
+                    <select class="form-control" id="service" name="service_id" required>
+                        <option value="" disabled selected>Pasirinkite paslaugą</option>
+                        {% for service in services %}
+                            <option value="{{ service.id }}">{{ service.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="employee">Darbuotojas</label>
+                    <select class="form-control" id="employee" name="employee_id" required>
+                        <option value="" disabled selected>Pasirinkite darbuotoją</option>
+                    </select>
+                </div>
+                <input type="hidden" id="selected-date" name="date" required>
+            </form>
+        </div>
+
+        <!-- Right side (calendar section) -->
+        <div class="col-md-6 col-sm-12 clndr-container">
+            <div id="calendar"></div>
+            <div class="button-section mt-4">
+                <button type="button" class="btn btn-primary w-100" onclick="document.getElementById('appointment-form').submit()">Tęsti</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="flash-form" action="{{ url_for('appointment.select_service') }}" method="POST" style="display: none;">
+    <input type="hidden" name="past_date_selected" value="1">
+</form>
+
+<!-- Custom CLNDR Template -->
+<script type="text/template" id="calendar-template">
+    <div class="clndr-controls">
+        <button class="clndr-prev-button">‹</button>
+        <div class="month" id="month-title"></div> <!-- Dynamic month title -->
+        <button class="clndr-next-button">›</button>
+    </div>
+    <div class="days-of-the-week">
+        <% _.each(daysOfTheWeek, function(day) { %>
+            <div class="header-day"><%= day %></div>
+        <% }); %>
+    </div>
+    <div class="days">
+        <% _.each(days, function(day) { %>
+            <div class="<%= day.classes %>" data-date="<%= moment(day.date).format('YYYY-MM-DD') %>"><%= day.day %></div>
+        <% }); %>
+    </div>
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/lt.js"></script>
+
+<style>
+    .past-day {
+        color: white;
+        pointer-events: none;
+        background-color: grey;
+    }
+    .busy-day {
+        color: white;
+        background-color: red;
+        pointer-events: none;
+    }
+    .holiday-day {
+        color: black;
+        background-color: #f8f9fa;
+        border: 3px solid red;
+        pointer-events: none;
+    }
+
+</style>
+
+<script>
+$(document).ready(function () {
+    // Set the locale to Lithuanian
+    moment.locale('lt');
+
+    // Define non-working holidays
+    const nonWorkingHolidays = [
+        "2025-01-01", "2025-02-16", "2025-03-11", "2025-03-31", "2025-04-01",
+        "2025-05-01", "2025-06-24", "2025-07-06", "2025-08-15", "2025-11-01",
+        "2025-11-02", "2025-12-24", "2025-12-25", "2025-12-26"
+    ];
+
+    const today = moment().startOf('day');
+
+    const calendar = $('#calendar').clndr({
+        template: $('#calendar-template').html(),
+        startWithMonth: today,
+        weekOffset: 0,
+        daysOfTheWeek: ['Pir', 'Ant', 'Tre', 'Ket', 'Pen', 'Šeš', 'Sek'],
+        clickEvents: {
+            click: function (target) {
+                const selectedDate = target.date;
+
+                // Check if category, service, and employee are selected
+                const category = $('#category').val();
+                const service = $('#service').val();
+                const employee = $('#employee').val();
+
+                if (!category || !service || !employee) {
+                    alert('Prieš pasirinkdami datą, pasirinkite kategoriją, paslaugą ir darbuotoją.');
+                    return;
+                }
+
+                // Prevent selection of holidays, Sundays, or other invalid days
+                if ($(target.element).hasClass('holiday-day') ||
+                    $(target.element).hasClass('non-working-day') ||
+                    $(target.element).hasClass('past-day') ||
+                    $(target.element).hasClass('busy-day')) {
+                    alert('Ši data nepasiekiama.');
+                    return;
+                }
+
+                // Allow selection of valid days
+                $('.days .day').removeClass('selected');
+                $(target.element).addClass('selected');
+                $('#selected-date').val(selectedDate.format('YYYY-MM-DD'));
+            },
+            onMonthChange: function (month) {
+                // Update the month title with Lithuanian month format
+                $('#month-title').text(month.format('MMMM YYYY'));
+
+                // Highlight past, busy, non-working days, and holidays
+                highlightPastDays();
+                highlightBusyDays();
+                highlightNonWorkingDays();
+                highlightHolidays();
+
+                // Disable previous button if in the current or earlier month
+                const previousButton = $('.clndr-prev-button');
+                if (month.isSameOrBefore(today, 'month')) {
+                    previousButton.addClass('disabled');
+                    previousButton.prop('disabled', true);
+                } else {
+                    previousButton.removeClass('disabled');
+                    previousButton.prop('disabled', false);
+                }
+            }
+        },
+        targets: {
+            previousButton: 'clndr-prev-button',
+            nextButton: 'clndr-next-button'
+        }
+    });
+
+    // Initial setting of the month title in Lithuanian
+    $('#month-title').text(today.format('MMMM YYYY'));
+
+    // Initial disabling of the previous button
+    const previousButton = $('.clndr-prev-button');
+    if (calendar.month.isSameOrBefore(today, 'month')) {
+        previousButton.addClass('disabled');
+        previousButton.prop('disabled', true);
+    }
+
+    // Disable past days and highlight them
+    function highlightPastDays() {
+        $('.day').each(function () {
+            const dayElement = $(this);
+            const date = moment(dayElement.data('date'));
+            if (date.isBefore(today, 'day')) {
+                dayElement.addClass('past-day');
+            } else {
+                dayElement.removeClass('past-day');
+            }
+        });
+    }
+
+    // Fetch and highlight busy days
+    function highlightBusyDays() {
+    const employeeId = $('#employee').val();
+
+    fetch(`/uzsakymai/get-busy-dates/${employeeId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch busy dates: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const fullyBookedDates = data.busy_dates || [];
+            const partiallyBusyDates = data.partially_busy_dates || [];
+
+            $('.day').each(function () {
+                const dayElement = $(this);
+                const date = dayElement.data('date');
+
+                if (fullyBookedDates.includes(date)) {
+                    dayElement.addClass('busy-day');
+                } else if (partiallyBusyDates.includes(date)) {
+                    dayElement.addClass('partially-busy-day');
+                } else {
+                    dayElement.removeClass('busy-day partially-busy-day');
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching busy dates:', error));
+    }
+
+
+    // Highlight Sundays as non-working days
+    function highlightNonWorkingDays() {
+        $('.day').each(function () {
+            const dayElement = $(this);
+            const date = moment(dayElement.data('date'));
+
+            if (date.day() === 0) { // Check if Sunday (0 is Sunday in moment.js)
+                dayElement.addClass('non-working-day');
+            } else {
+                dayElement.removeClass('non-working-day');
+            }
+        });
+    }
+
+    // Highlight holidays
+    function highlightHolidays() {
+        $('.day').each(function () {
+            const dayElement = $(this);
+            const date = dayElement.data('date');
+
+            if (nonWorkingHolidays.includes(date)) {
+                dayElement.addClass('holiday-day').removeClass('past-day busy-day non-working-day partially-busy-day');
+            }
+        });
+    }
+
+    // Highlight all types of days initially
+    highlightPastDays();
+    highlightBusyDays();
+    highlightNonWorkingDays();
+    highlightHolidays();
+
+    // Re-highlight busy days and holidays whenever the employee or service changes
+    $('#employee, #service').on('change', function () {
+        highlightBusyDays();
+        highlightHolidays();
+    });
+
+    // Form submission validation
+    document.getElementById('appointment-form').addEventListener('submit', function (event) {
+        const selectedDate = $('#selected-date').val();
+        if (!selectedDate) {
+            alert('Pasirinkite tinkamą datą.');
+            event.preventDefault();
+            return;
+        }
+
+        const selectedDay = $(`.day[data-date="${selectedDate}"]`);
+        if (selectedDay.hasClass('past-day') || selectedDay.hasClass('busy-day') || selectedDay.hasClass('non-working-day') || selectedDay.hasClass('holiday-day')) {
+            alert('Ši data nepasiekiama. Pasirinkite kitą.');
+            event.preventDefault();
+        }
+    });
+
+    // Load services when category changes
+    document.getElementById('category').addEventListener('change', function () {
+        const categoryId = this.value;
+
+        fetch(`/uzsakymai/get-services/${categoryId}`) // Corrected syntax
+            .then(response => response.json())
+            .then(data => {
+                const serviceDropdown = document.getElementById('service');
+                serviceDropdown.innerHTML = '<option value="" disabled selected>Pasirinkite paslaugą</option>';
+
+                data.services.forEach(service => {
+                    const option = document.createElement('option');
+                    option.value = service.id;
+                    option.textContent = service.name;
+                    serviceDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Klaida gaunant paslaugas:', error));
+    });
+
+    // Load employees when service changes
+    document.getElementById('service').addEventListener('change', function () {
+        const serviceId = this.value;
+
+        fetch(`/uzsakymai/get-employees/${serviceId}`) // Corrected syntax
+            .then(response => response.json())
+            .then(data => {
+                const employeeDropdown = document.getElementById('employee');
+                employeeDropdown.innerHTML = '<option value="" disabled selected>Pasirinkite darbuotoją</option>';
+
+                data.employees.forEach(employee => {
+                    const option = document.createElement('option');
+                    option.value = employee.id;
+                    option.textContent = `${employee.name} ${employee.last_name}`;
+                    employeeDropdown.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Klaida bandant užkrauti darbuotojus:', error));
+    });
+});
+
+document.getElementById('service').addEventListener('change', function () {
+    const serviceId = this.value;
+    const employeeId = document.getElementById('employee').value;
+
+    if (!serviceId || !employeeId) return;
+
+    fetch(`/uzsakymai/get-available-times`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            service_id: serviceId,
+            employee_id: employeeId,
+            date: document.getElementById('selected-date').value
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.available_times) {
+                const timeSlotsContainer = document.querySelector('.time-slots');
+                timeSlotsContainer.innerHTML = ''; // Clear previous slots
+
+                data.available_times.forEach(time => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'time-slot';
+                    button.dataset.time = time;
+                    button.textContent = time;
+
+                    timeSlotsContainer.appendChild(button);
+                });
+            }
+        })
+        .catch(error => console.error('Error fetching available times:', error));
+});
+
+</script>
+
+{% endblock %}

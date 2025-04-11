@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Personal Information{% endblock %}
+
+{% block content %}
+{% set step_number = 3 %}
+{% include 'progress_tracker.html' %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="POST" id="personal-info-form" class="p-4 border rounded" >
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="first_name">Vardas:</label>
+                        <input type="text" id="first_name" name="first_name" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="last_name">Pavardė:</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="email">El. paštas:</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="tel_nr">Telefono numeris:</label>
+                        <input type="tel" id="tel_nr" name="tel_nr" class="form-control" required>
+                        <small id="phone-error" class="text-danger d-none">Telefono numeris neteisingas!</small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="animal_id">Pasirinkite augintinį:</label>
+                    <select id="animal_id" name="animal_id" class="form-control" onchange="updateAnimalFields()">
+                        {% for animal in user.animals %}
+                        <option value="{{ animal.id }}" data-species="{{ animal.species }}" data-name="{{ animal.name }}">
+                            {{ animal.name }} ({{ animal.species }})
+                        </option>
+                        {% endfor %}
+                        <option value="new">Pridėti naują augintinį</option>
+                    </select>
+                </div>
+
+                <!-- Hidden fields for existing animal details -->
+                <input type="hidden" id="species" name="species">
+                <input type="hidden" id="animal_name" name="animal_name">
+
+                <!-- New Animal Fields -->
+                <div class="form-row" id="new-animal-fields" style="display: none;">
+                    <div class="form-group col-md-6">
+                        <label for="new_species">Gyvūno rūšis:</label>
+                        <input type="text" id="new_species" name="new_species" class="form-control">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="new_animal_name">Gyvūno vardas:</label>
+                        <input type="text" id="new_animal_name" name="new_animal_name" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="symptoms">Simptomai:</label>
+                        <textarea id="symptoms" name="symptoms" class="form-control" rows="4" placeholder="Aprašykite simptomus..."></textarea>
+                    </div>
+                </div>
+
+                <div class="button-section mt-4">
+                    <button type="submit" class="btn btn-primary w-50 d-block mx-auto">Tęsti</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include intl-tel-input CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize intl-tel-input
+        const phoneInputField = document.querySelector("#tel_nr");
+        const phoneInput = window.intlTelInput(phoneInputField, {
+            initialCountry: "lt", // Set the initial country (Lithuania)
+            preferredCountries: ["lt", "lv", "gb", "pl", "ua", "no", "by"], // Preferred countries
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js" // For number formatting
+        });
+
+        // Handle form submission
+        const form = document.querySelector("#personal-info-form");
+        form.addEventListener("submit", function (event) {
+            // Check if the phone number is valid
+            if (!phoneInput.isValidNumber()) {
+                event.preventDefault(); // Stop form submission
+                const errorElement = document.getElementById("phone-error");
+                errorElement.classList.remove("d-none");
+                errorElement.textContent = "Telefono numeris neteisingas!";
+                return; // Do not proceed with form submission
+            }
+
+            // Set the full phone number (e.g., with country code) into the input field
+            const fullPhoneNumber = phoneInput.getNumber();
+            phoneInputField.value = fullPhoneNumber; // Replace the input value with the full number
+        });
+
+        // Clear error message when the user starts typing
+        phoneInputField.addEventListener("input", function () {
+            const errorElement = document.getElementById("phone-error");
+            errorElement.classList.add("d-none");
+        });
+    });
+
+
+    function updateAnimalFields() {
+    const animalDropdown = document.getElementById('animal_id');
+    const newAnimalFields = document.getElementById('new-animal-fields');
+    const speciesInput = document.getElementById('species');
+    const animalNameInput = document.getElementById('animal_name');
+    const newSpeciesInput = document.getElementById('new_species');
+    const newAnimalNameInput = document.getElementById('new_animal_name');
+
+    if (animalDropdown.value === 'new') {
+        // Show new animal fields and clear hidden inputs
+        newAnimalFields.style.display = 'flex';
+        speciesInput.value = '';
+        animalNameInput.value = '';
+    } else {
+        // Hide new animal fields and populate hidden inputs with selected animal details
+        newAnimalFields.style.display = 'none';
+        const selectedOption = animalDropdown.options[animalDropdown.selectedIndex];
+        speciesInput.value = selectedOption.getAttribute('data-species');
+        animalNameInput.value = selectedOption.getAttribute('data-name');
+    }
+}
+
+// Initialize the fields on page load
+document.addEventListener('DOMContentLoaded', updateAnimalFields);
+
+
+
+
+</script>
+
+{% endblock %}

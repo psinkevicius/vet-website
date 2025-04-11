@@ -1,0 +1,35 @@
+<!-- progress_tracker.html -->
+<div class="progress-tracker">
+    <div class="step">
+        <div class="circle">1</div>
+        <div class="label">Paslauga</div>
+    </div>
+    <div class="step">
+        <div class="circle">2</div>
+        <div class="label">Laikas</div>
+    </div>
+    <div class="step">
+        <div class="circle">3</div>
+        <div class="label">Informacija</div>
+    </div>
+    <div class="step">
+        <div class="circle">4</div>
+        <div class="label">Baigta</div>
+    </div>
+</div>
+
+<script>
+function goToStep(stepNumber) {
+    const steps = document.querySelectorAll('.step');
+    steps.forEach((step, index) => {
+        if (index < stepNumber) {
+            step.classList.add('active');
+        } else {
+            step.classList.remove('active');
+        }
+    });
+}
+
+// Call goToStep with the provided step number
+goToStep({{ step_number }});
+</script>

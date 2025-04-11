@@ -1,0 +1,120 @@
+<table id="myTable" class="display">
+    <thead>
+        <tr>
+            <th>El. paštas</th>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>Rolė</th>
+            <th>Veiksmai</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr data-id="{{ user.id }}">
+            <td class="email">{{ user.email }}</td>
+            <td class="first_name">{{ user.first_name }}</td>
+            <td class="last_name">{{ user.last_name }}</td>
+            <td class="role">{{ user.role }}</td>
+            <td>
+                <a href="#" class="text-primary" title="View" onclick="viewUserDetails(event, {{ user.id }})">
+                    <i class="fa fa-eye"></i>
+                </a>
+                <a href="#" class="text-info mx-2 edit-btn" title="Edit" onclick="enableEdit(event, {{ user.id }})">
+                    <i class="fa fa-pencil-alt"></i>
+                </a>
+                <a href="#" class="text-danger delete-user" data-user-id="{{ user.id }}" title="Delete">
+                    <i class="fa fa-trash"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="viewUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Naudotojo detalės</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>ID:</strong> <span id="user-id"></span></p>
+                <p><strong>El. paštas:</strong> <span id="user-email"></span></p>
+                <p><strong>Vardase:</strong> <span id="user-first-name"></span></p>
+                <p><strong>Pavardė:</strong> <span id="user-last-name"></span></p>
+                <p><strong>Rolė:</strong> <span id="user-role"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button class="btn btn-secondary" onclick="openAddUserModal()">Pridėti naudotoją</button>
+
+<div id="addUserModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pridėti naują naudotoją</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addUserForm">
+                    <div class="form-group">
+                        <label for="addUserEmail">El. paštas</label>
+                        <input type="email" class="form-control" id="addUserEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserFirstName">Vardas</label>
+                        <input type="text" class="form-control" id="addUserFirstName" name="first_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserLastName">Pavardė</label>
+                        <input type="text" class="form-control" id="addUserLastName" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserPassword">Slaptažodis</label>
+                        <input type="password" class="form-control" id="addUserPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="addUserRole">Rolė</label>
+                        <select class="form-control" id="addUserRole" name="role">
+                            <option value="admin">Administratorius</option>
+                            <option value="customer" selected>Klientas</option>
+                            <option value="employee">Darbuotojas</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary d-block mx-auto">Pridėti naudotoją</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    // Initialize DataTable after DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+        let table = new DataTable('#myTable');
+    });
+
+
+
+
+
+
+
+
+
+</script>
+

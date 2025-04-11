@@ -1,0 +1,27 @@
+<form method="POST" action="{{ url_for('admin.add_service') }}">
+    <div class="form-group">
+        <label for="service_name">Paslaugos pavadinimas:</label>
+        <input type="text" id="service_name" name="name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="description">Aprašymas:</label>
+        <textarea id="description" name="description" class="form-control" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="price">Kaina:</label>
+        <input type="number" id="price" name="price" class="form-control" step="0.01" required>
+    </div>
+    <div class="form-group">
+        <label for="duration">Trukmė (minutės):</label>
+        <input type="number" id="duration" name="duration" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="category">Kategorija:</label>
+        <select id="category" name="category_id" class="form-control" required>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-secondary d-block mx-auto" >Pridėti paslaugą</button>
+</form>

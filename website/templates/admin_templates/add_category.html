@@ -1,0 +1,38 @@
+<form method="POST" action="{{ url_for('admin.add_category') }}" class="mb-4">
+    <div class="form-group">
+        <label for="category_name">Kategorijos pavadinimas:</label>
+        <input type="text" id="category_name" name="name" class="form-control w-25" required>
+    </div>
+    <button type="submit" class="btn btn-secondary">Pridėti kategoriją</button>
+</form>
+
+<!-- Duomenų lentelė, kurioje rodomos visos kategorijos -->
+
+<table id="myTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Pavadinimas</th>
+            <th>Veiksmai</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr data-id="{{ category.id }}">
+            <td>{{ category.id }}</td>
+            <td>{{ category.name }}</td>
+            <td>
+                <button class="btn btn-info btn-sm" onclick="editCategory({{ category.id }})">Keisti</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteCategory({{ category.id }})">Trinti</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Duomenų lentelės inicializavimas -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('#myTable').DataTable();
+
+</script>

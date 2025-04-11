@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Confirm Appointment{% endblock %}
+
+{% block content %}
+{% set step_number = 4 %}
+{% include 'progress_tracker.html' %}
+
+<ul class="list-group">
+    <li class="list-group-item">
+        <strong>Paslauga:</strong> {{ service.name }} - {{ service.price }} EUR
+    </li>
+    <li class="list-group-item">
+        <strong>Data:</strong> {{ session.get('date') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Laikas:</strong> {{ session.get('time') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Gydytojas:</strong> {{ employee.first_name }} {{ employee.last_name }}
+    </li>
+    <li class="list-group-item">
+        <strong>El. paštas:</strong> {{ session.get('email') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Telefono numeris:</strong> {{ session.get('tel_nr') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Vardas:</strong> {{ session.get('first_name') }} {{ session.get('last_name') }}
+    </li>
+    <!-- New Fields -->
+    <li class="list-group-item">
+        <strong>Rūšis:</strong> {{ session.get('species', 'N/A') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Gyvūno vardas:</strong> {{ session.get('animal_name', 'N/A') }}
+    </li>
+    <li class="list-group-item">
+        <strong>Simptomai:</strong> {{ session.get('symptoms', 'N/A') }}
+    </li>
+</ul>
+<form method="POST" style="margin-top: 20px;" onsubmit="showSpinner(this)">
+    <div class="button-section mt-4">
+        <button id="confirm-button" type="submit" class="btn btn-primary w-25 d-block mx-auto">
+            <span id="button-text">Patvirtinti</span>
+            <div id="spinner" class="spinner-border spinner-border-sm text-light d-none" role="status"></div>
+        </button>
+    </div>
+</form>
+
+<script>
+function showSpinner(form) {
+    const confirmButton = form.querySelector("#confirm-button");
+    const buttonText = confirmButton.querySelector("#button-text");
+    const spinner = confirmButton.querySelector("#spinner");
+
+    // Show spinner and disable button
+    buttonText.classList.add("d-none");
+    spinner.classList.remove("d-none");
+    confirmButton.disabled = true;
+}
+</script>
+{% endblock %}

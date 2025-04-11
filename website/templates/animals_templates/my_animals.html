@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}My Animals{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Search Form -->
+    <form method="GET" action="{{ url_for('animals.my_animals') }}" class="mb-4">
+        <div class="d-flex w-50">
+            <input type="text" name="search" class="form-control me-2" placeholder="Search by name or species" value="{{ search_query }}">
+            <button type="submit" class="btn coloured-button">Ieškoti</button>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for animal in animals %}
+        <div class="col">
+            <div class="card shadow-lg border-0 rounded-lg p-5 h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title text-primary">{{ animal.name }} (<strong>{{ animal.species }}</strong>)</h3>
+                        <button class="btn btn-sm btn-danger" onclick="deleteAnimal({{ animal.id }})" title="Delete Animal">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                    <p><a href="{{ url_for('animals.animal_history', animal_id=animal.id) }}" class="btn coloured-button">Peržiūrėti istoriją</a></p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+            {% if pagination.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('animals.my_animals', page=pagination.prev_num, search=search_query) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&laquo;</span>
+            </li>
+            {% endif %}
+
+            {% for page_num in range(1, pagination.pages + 1) %}
+            <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('animals.my_animals', page=page_num, search=search_query) }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if pagination.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('animals.my_animals', page=pagination.next_num, search=search_query) }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">&raquo;</span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<script>
+function deleteAnimal(animalId) {
+    if (!confirm("Ar tikrai norite ištrinti šį gyvūną?")) {
+        return;
+    }
+
+    fetch(`/animals/delete/${animalId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(response => response.json().then(data => ({ status: response.status, body: data })))
+    .then(({ status, body }) => {
+        if (status === 200) {
+            alert("Gyvūnas sėkmingai ištrintas.");
+            location.reload();
+        } else {
+            alert(body.error || "Nepavyko ištrinti gyvūno.");
+        }
+    })
+    .catch(() => alert("Įvyko klaida. Bandykite dar kartą."));
+}
+
+</script>
+{% endblock %}

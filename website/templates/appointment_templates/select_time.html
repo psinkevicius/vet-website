@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Select Time{% endblock %}
+
+{% block content %}
+{% set step_number = 2 %}
+{% include 'progress_tracker.html' %}
+
+
+<form method="POST">
+    <div class="form-group">
+
+        <div class="time-picker">
+            <div class="time-slots">
+                {% for time in available_times %}
+                    <button type="button" class="time-slot" data-time="{{ time }}">{{ time }}</button>
+                {% endfor %}
+            </div>
+        </div>
+        <input type="hidden" id="selected-time" name="time" required>
+    </div>
+     <div class="button-section mt-4">
+        <button type="submit" class="btn btn-primary w-25 d-block mx-auto" >Tęsti</button>
+     </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const timeSlots = document.querySelectorAll('.time-slot');
+        const selectedTimeInput = document.getElementById('selected-time');
+
+        timeSlots.forEach(slot => {
+            slot.addEventListener('click', () => {
+                // Remove "selected" class from all buttons
+                timeSlots.forEach(s => s.classList.remove('selected'));
+
+                // Add "selected" class to the clicked button
+                slot.classList.add('selected');
+
+                // Update the hidden input value
+                selectedTimeInput.value = slot.dataset.time;
+            });
+        });
+    });
+</script>
+{% endblock %}
+

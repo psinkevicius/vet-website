@@ -1,0 +1,17 @@
+[
+    {
+        "id": 1,
+        "email": "paulius031@gmail.com",
+        "tel_nr": 8789779879,
+        "first_name": "klientas",
+        "last_name": "soprano",
+        "data": "3",
+        "date": "2023-11-08",
+        "time": "02:08:00.000000",
+        "status": "Completed",
+        "uzsakovo_id": 13,
+        "user_id": 6,
+        "created_at": "2024-11-08 19:03:49.719028",
+        "service_id": 3
+    }
+]

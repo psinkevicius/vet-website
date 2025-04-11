@@ -1,0 +1,50 @@
+ <table id="myTable" class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th>Laiko žyma</th>
+                <th>Lygis</th>
+                <th>Žinutė</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for log in logs %}
+            <tr>
+                {% set parts = log.split(' - ') %}
+                <td>{{ parts[0] }}</td>
+                <td>{{ parts[1] }}</td>
+                <td>{{ parts[2:]|join(' - ') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+ </table>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Initialize DataTable
+    $('#myTable').DataTable({
+        pageLength: 50, // Set default number of rows per page
+        order: [[0, 'desc']], // Order by timestamp descending by default
+        dom: '<"top"f>t<"bottom"lp><"clear">', // Customize layout (search, table, pagination)
+        language: {
+            search: "Search logs:", // Customize search input placeholder
+            lengthMenu: "Show _MENU_ logs per page",
+            zeroRecords: "No matching logs found",
+            info: "Showing page _PAGE_ of _PAGES_",
+            infoEmpty: "No logs available",
+            infoFiltered: "(filtered from _MAX_ total logs)",
+        },
+        columnDefs: [
+            {
+                targets: 1, // Add filtering options for log levels
+                render: function (data, type, row) {
+                    if (type === 'filter') {
+                        return data.toUpperCase(); // Filter by uppercase level names
+                    }
+                    return data;
+                }
+            }
+        ]
+    });
+});
+</script>

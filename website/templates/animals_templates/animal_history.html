@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Medical History for {{ animal.name }}{% endblock %}
+
+{% block content %}
+
+
+
+<div class="container mt-5">
+    <h1 class="mb-4">Medicinos istorija {{ animal.name }}</h1>
+    <p><strong>Rūšis:</strong> {{ animal.species }}</p>
+
+    <!-- DataTable -->
+    <table id="medical-history-table" class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Laikas</th>
+                <th>Simptomai</th>
+                <th>Statusas</th>
+                <th>Paslauga</th>
+                <th>Darbuotojas</th>
+                <th>Gydymas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.date }}</td>
+                <td>{{ appointment.time }}</td>
+                <td>{{ appointment.symptoms | default('N/A') }}</td>
+                <td>{{ appointment.status }}</td>
+                <td>{{ appointment.service.name }}</td>
+                <td>{{ get_user_by_id(appointment.user_id).first_name }} {{ get_user_by_id(appointment.user_id).last_name }}</td>
+                <td>{{ appointment.treatment | default('N/A') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Load jQuery first -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Load DataTables CSS and JS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+   let table = new DataTable('#medical-history-table');
+</script>
+
+{% endblock %}
